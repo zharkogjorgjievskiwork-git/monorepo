@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import type { DraftDay, Entry } from '../types'
+import { useDraftDay } from '../hooks/useDraftDay'
+import type { Entry } from '../types'
 
-const DAY_START = 8   // 08:00
-const DAY_END = 18    // 18:00
+const DAY_START = 8
+const DAY_END = 18
 const TOTAL_MINUTES = (DAY_END - DAY_START) * 60
-const PX_PER_MINUTE = 3 // 1px per minute → 1800px total height
+const PX_PER_MINUTE = 3
 
 const PROJECT_COLORS: Record<string, string> = {
   'Client Portal Redesign': '#c8f135',
@@ -38,18 +38,7 @@ const HOUR_LABELS = Array.from({ length: DAY_END - DAY_START + 1 }, (_, i) => DA
 
 export default function DraftDayPage() {
   const { date } = useParams<{ date: string }>()
-  const [data, setData] = useState<DraftDay | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/mocks/draft-day.json')
-      .then(r => {
-        if (!r.ok) throw new Error('Failed to load mock data')
-        return r.json()
-      })
-      .then(setData)
-      .catch(e => setError(e.message))
-  }, [date])
+  const { data, error, loading, isMock } = useDraftDay(date ?? '')
 
   const totalHours = data?.entries.reduce((sum, e) => sum + e.hours, 0) ?? 0
   const timelineHeight = TOTAL_MINUTES * PX_PER_MINUTE
@@ -61,7 +50,7 @@ export default function DraftDayPage() {
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
             <p className="text-xs font-mono uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>
-              Draft Timesheet
+              Draft Timesheet {isMock && <span style={{ color: '#f97316' }}>[mock]</span>}
             </p>
             <h1 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--text)', fontFamily: 'Syne, sans-serif' }}>
               {date ?? data?.date ?? '—'}
@@ -83,7 +72,7 @@ export default function DraftDayPage() {
           </div>
         )}
 
-        {!data && !error && (
+        {loading && (
           <div className="flex items-center gap-3 py-20 justify-center" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>
             <div className="w-4 h-4 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
             Loading...
@@ -111,7 +100,6 @@ export default function DraftDayPage() {
 
             {/* Timeline track */}
             <div className="relative flex-1" style={{ height: timelineHeight }}>
-              {/* Hour grid lines */}
               {HOUR_LABELS.map(hour => (
                 <div
                   key={hour}
@@ -124,7 +112,6 @@ export default function DraftDayPage() {
                 />
               ))}
 
-              {/* Entry cards */}
               {data.entries.map((entry: Entry) => {
                 const top = toPx(entry.start)
                 const height = durationPx(entry.start, entry.end)
@@ -145,16 +132,10 @@ export default function DraftDayPage() {
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
-                        <span
-                          className="text-xs font-semibold uppercase tracking-wider truncate"
-                          style={{ color, fontFamily: 'DM Mono, monospace' }}
-                        >
+                        <span className="text-xs font-semibold uppercase tracking-wider truncate" style={{ color, fontFamily: 'DM Mono, monospace' }}>
                           {entry.project}
                         </span>
-                        <span
-                          className="text-xs font-mono flex-shrink-0"
-                          style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}
-                        >
+                        <span className="text-xs font-mono flex-shrink-0" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>
                           {entry.hours}h
                         </span>
                       </div>
