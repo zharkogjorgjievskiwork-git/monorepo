@@ -1,0 +1,12 @@
+# .NET
+agent/bin/
+agent/obj/
+agent/*.user
+
+# Node
+panel/node_modules/
+panel/dist/
+
+# General
+.DS_Store
+*.env
