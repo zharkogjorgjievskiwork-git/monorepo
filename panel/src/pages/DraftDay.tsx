@@ -18,11 +18,6 @@ function timeToMinutes(time: string): number {
   return h * 60 + m
 }
 
-function toPercent(time: string): number {
-  const mins = timeToMinutes(time) - DAY_START * 60
-  return (mins / TOTAL_MINUTES) * 100
-}
-
 function toPx(time: string): number {
   const mins = timeToMinutes(time) - DAY_START * 60
   return mins * PX_PER_MINUTE
