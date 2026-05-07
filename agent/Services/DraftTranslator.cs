@@ -11,14 +11,14 @@ public class DraftTranslator
     public TimesheetApiRequest Translate(ApproveRequest request)
     {
         var rows = request.Draft.Entries.Select(entry => new TimesheetRow(
-            UserId:    request.UserId,
-            Date:      request.Draft.Date,
-            Project:   entry.Project,
-            Task:      entry.Task,
-            Hours:     entry.Hours,
+            UserId: request.UserId,
+            Date: request.Draft.Date,
+            Project: entry.Project,
+            Task: entry.Task,
+            Hours: entry.Hours,
             StartTime: entry.Start,
-            EndTime:   entry.End,
-            Notes:     entry.Notes
+            EndTime: entry.End,
+            Notes: entry.Notes
         )).ToList();
 
         return new TimesheetApiRequest(rows);
