@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useDraftDay } from '../hooks/useDraftDay'
 import { useApprove } from '../hooks/useApprove'
+import { EntryChips } from '../components/EntryChips'
 import type { Entry } from '../types'
 
 const DAY_START = 8
@@ -36,8 +37,6 @@ function formatTime(time: string): string {
 }
 
 const HOUR_LABELS = Array.from({ length: DAY_END - DAY_START + 1 }, (_, i) => DAY_START + i)
-
-// Fixture user for acceptance testing
 const FIXTURE_USER_ID = 'fixture-user-001'
 
 export default function DraftDayPage() {
@@ -50,7 +49,6 @@ export default function DraftDayPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-      {/* Header */}
       <header className="border-b sticky top-0 z-10 backdrop-blur-sm" style={{ borderColor: 'var(--border)', background: 'rgba(15,15,17,0.9)' }}>
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
@@ -92,7 +90,6 @@ export default function DraftDayPage() {
             )}
           </div>
         </div>
-        {/* Approve result banner */}
         {approveResult && !approveResult.success && (
           <div className="max-w-4xl mx-auto px-6 pb-3">
             <div className="rounded-lg px-4 py-2 text-sm font-mono" style={{ background: '#2a1010', color: '#f87171', border: '1px solid #7f1d1d' }}>
@@ -108,14 +105,12 @@ export default function DraftDayPage() {
             ⚠ {error}
           </div>
         )}
-
         {loading && (
           <div className="flex items-center gap-3 py-20 justify-center" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>
             <div className="w-4 h-4 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
             Loading...
           </div>
         )}
-
         {data && (
           <div className="flex gap-0">
             <div className="relative flex-shrink-0 w-16" style={{ height: timelineHeight }}>
@@ -123,11 +118,7 @@ export default function DraftDayPage() {
                 <div
                   key={hour}
                   className="absolute right-3 text-xs font-mono -translate-y-2"
-                  style={{
-                    top: (hour - DAY_START) * 60 * PX_PER_MINUTE,
-                    color: 'var(--text-muted)',
-                    fontFamily: 'DM Mono, monospace',
-                  }}
+                  style={{ top: (hour - DAY_START) * 60 * PX_PER_MINUTE, color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}
                 >
                   {hour.toString().padStart(2, '0')}:00
                 </div>
@@ -139,11 +130,7 @@ export default function DraftDayPage() {
                 <div
                   key={hour}
                   className="absolute left-0 right-0 border-t"
-                  style={{
-                    top: (hour - DAY_START) * 60 * PX_PER_MINUTE,
-                    borderColor: hour % 2 === 0 ? 'var(--border)' : 'transparent',
-                    borderStyle: 'dashed',
-                  }}
+                  style={{ top: (hour - DAY_START) * 60 * PX_PER_MINUTE, borderColor: hour % 2 === 0 ? 'var(--border)' : 'transparent', borderStyle: 'dashed' }}
                 />
               ))}
 
@@ -165,7 +152,7 @@ export default function DraftDayPage() {
                       padding: '10px 12px',
                     }}
                   >
-                    <div>
+                    <div className="flex flex-col h-full">
                       <div className="flex items-start justify-between gap-2">
                         <span className="text-xs font-semibold uppercase tracking-wider truncate" style={{ color, fontFamily: 'DM Mono, monospace' }}>
                           {entry.project}
@@ -184,9 +171,12 @@ export default function DraftDayPage() {
                           {entry.notes}
                         </p>
                       )}
+                      {height > 100 && entry.chips && entry.chips.length > 0 && (
+                        <EntryChips chips={entry.chips} />
+                      )}
                     </div>
                     {height > 50 && (
-                      <p className="text-xs font-mono mt-2" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>
+                      <p className="text-xs font-mono mt-2 flex-shrink-0" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>
                         {formatTime(entry.start)} → {formatTime(entry.end)}
                       </p>
                     )}
