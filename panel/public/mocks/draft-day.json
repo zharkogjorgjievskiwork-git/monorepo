@@ -1,0 +1,69 @@
+{
+  "date": "2026-05-06",
+  "entries": [
+    {
+      "id": "1",
+      "project": "Client Portal Redesign",
+      "task": "Wireframing",
+      "start": "08:00",
+      "end": "09:30",
+      "hours": 1.5,
+      "notes": "Initial lo-fi wireframes for dashboard",
+      "chips": [
+        { "type": "calendar", "label": "Design Sync", "eventId": "AAMkAGI2NGVh" },
+        { "type": "mail", "label": "RE: Wireframe feedback", "messageId": "AAMkAGI2NGVhNTM" }
+      ]
+    },
+    {
+      "id": "2",
+      "project": "Internal Tools",
+      "task": "Code Review",
+      "start": "10:00",
+      "end": "11:00",
+      "hours": 1,
+      "notes": "Reviewed PRs #42 and #43",
+      "chips": [
+        { "type": "devops", "label": "AB#1042", "org": "contoso", "project": "InternalTools", "workItemId": "1042" },
+        { "type": "devops", "label": "AB#1043", "org": "contoso", "project": "InternalTools", "workItemId": "1043" }
+      ]
+    },
+    {
+      "id": "3",
+      "project": "Client Portal Redesign",
+      "task": "Dev — Timeline Component",
+      "start": "11:30",
+      "end": "13:00",
+      "hours": 1.5,
+      "notes": "Built vertical timeline with entry cards",
+      "chips": [
+        { "type": "devops", "label": "AB#2201", "org": "contoso", "project": "ClientPortal", "workItemId": "2201" },
+        { "type": "calendar", "label": "Dev standup", "eventId": "AAMkAGI2NGVhNTM2" }
+      ]
+    },
+    {
+      "id": "4",
+      "project": "Hackathon",
+      "task": "AI Agent Integration",
+      "start": "14:00",
+      "end": "16:30",
+      "hours": 2.5,
+      "notes": "Wired up Claude API to timesheet draft flow",
+      "chips": [
+        { "type": "calendar", "label": "Hackathon kickoff", "eventId": "AAMkAGI2NGVhNTM3" },
+        { "type": "mail", "label": "AI Agent spec", "messageId": "AAMkAGI2NGVhNTM4" }
+      ]
+    },
+    {
+      "id": "5",
+      "project": "Internal Tools",
+      "task": "Documentation",
+      "start": "17:00",
+      "end": "18:00",
+      "hours": 1,
+      "notes": "Updated README and API docs",
+      "chips": [
+        { "type": "devops", "label": "AB#1099", "org": "contoso", "project": "InternalTools", "workItemId": "1099" }
+      ]
+    }
+  ]
+}

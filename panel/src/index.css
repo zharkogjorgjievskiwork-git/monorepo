@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg: #0f0f11;
+  --surface: #18181c;
+  --border: #2a2a30;
+  --accent: #c8f135;
+  --accent-dim: #a3c82a;
+  --text: #e8e8e0;
+  --text-muted: #6b6b72;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  margin: 0;
+}

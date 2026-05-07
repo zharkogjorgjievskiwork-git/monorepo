@@ -10,3 +10,6 @@ panel/dist/
 # General
 .DS_Store
 *.env
+
+# env
+panel/.env.local
