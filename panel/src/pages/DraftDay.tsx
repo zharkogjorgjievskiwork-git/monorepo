@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useDraftDay } from '../hooks/useDraftDay'
+import { useApprove } from '../hooks/useApprove'
 import type { Entry } from '../types'
 
 const DAY_START = 8
@@ -36,9 +37,13 @@ function formatTime(time: string): string {
 
 const HOUR_LABELS = Array.from({ length: DAY_END - DAY_START + 1 }, (_, i) => DAY_START + i)
 
+// Fixture user for acceptance testing
+const FIXTURE_USER_ID = 'fixture-user-001'
+
 export default function DraftDayPage() {
   const { date } = useParams<{ date: string }>()
   const { data, error, loading, isMock } = useDraftDay(date ?? '')
+  const { approve, loading: approving, result: approveResult } = useApprove()
 
   const totalHours = data?.entries.reduce((sum, e) => sum + e.hours, 0) ?? 0
   const timelineHeight = TOTAL_MINUTES * PX_PER_MINUTE
@@ -56,13 +61,45 @@ export default function DraftDayPage() {
               {date ?? data?.date ?? '—'}
             </h1>
           </div>
-          <div className="text-right">
-            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>Total</p>
-            <p className="text-3xl font-extrabold" style={{ color: 'var(--accent)', fontFamily: 'Syne, sans-serif' }}>
-              {totalHours.toFixed(1)}<span className="text-base font-normal ml-1" style={{ color: 'var(--text-muted)' }}>hrs</span>
-            </p>
+          <div className="flex items-center gap-6">
+            <div className="text-right">
+              <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'DM Mono, monospace' }}>Total</p>
+              <p className="text-3xl font-extrabold" style={{ color: 'var(--accent)', fontFamily: 'Syne, sans-serif' }}>
+                {totalHours.toFixed(1)}<span className="text-base font-normal ml-1" style={{ color: 'var(--text-muted)' }}>hrs</span>
+              </p>
+            </div>
+            {data && (
+              <button
+                onClick={() => approve(FIXTURE_USER_ID, data)}
+                disabled={approving || approveResult?.success === true}
+                style={{
+                  background: approveResult?.success ? '#1a2e00' : 'var(--accent)',
+                  color: approveResult?.success ? '#c8f135' : '#0f0f11',
+                  border: approveResult?.success ? '1px solid #c8f135' : 'none',
+                  borderRadius: '8px',
+                  padding: '10px 20px',
+                  fontFamily: 'Syne, sans-serif',
+                  fontWeight: 700,
+                  fontSize: '14px',
+                  cursor: approving || approveResult?.success ? 'not-allowed' : 'pointer',
+                  opacity: approving ? 0.7 : 1,
+                  transition: 'all 0.2s',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {approving ? 'Submitting…' : approveResult?.success ? '✓ Approved' : 'Approve Draft'}
+              </button>
+            )}
           </div>
         </div>
+        {/* Approve result banner */}
+        {approveResult && !approveResult.success && (
+          <div className="max-w-4xl mx-auto px-6 pb-3">
+            <div className="rounded-lg px-4 py-2 text-sm font-mono" style={{ background: '#2a1010', color: '#f87171', border: '1px solid #7f1d1d' }}>
+              ⚠ Approval failed: {approveResult.error}
+            </div>
+          </div>
+        )}
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-10">
@@ -81,7 +118,6 @@ export default function DraftDayPage() {
 
         {data && (
           <div className="flex gap-0">
-            {/* Hour labels */}
             <div className="relative flex-shrink-0 w-16" style={{ height: timelineHeight }}>
               {HOUR_LABELS.map(hour => (
                 <div
@@ -98,7 +134,6 @@ export default function DraftDayPage() {
               ))}
             </div>
 
-            {/* Timeline track */}
             <div className="relative flex-1" style={{ height: timelineHeight }}>
               {HOUR_LABELS.map(hour => (
                 <div
